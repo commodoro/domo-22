@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet"> 
+		<meta charset="utf8">
+		<title>Ocupación de sillas</title>
+		<style>
+			html,body {
+				width: 100%;
+				height: 100%;
+				display: flex;
+				align-items: center;
+				font-family: 'Lato', sans-serif;
+			}
+			
+			#root {
+				width: 100%;
+				display: flex;
+				align-items: center;
+				flex-direction:column;
+			}
+
+			#table {
+				width: 20vw;
+				height: 20vw;
+				background-color: #573d0e;
+				border-radius: 50%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				font-size: xx-large;
+				color:aliceblue;
+			}
+
+			.chair-container {
+				position: relative;
+				top: -13.5vw;
+				right: -6.5vw;
+			}
+
+			.chair {
+				width: 7vw;
+				height: 7vw;
+				background-color: red;
+				position: absolute;
+				border-radius: 2.5vw;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				font-size: large;
+				color:aliceblue;
+			}
+
+			.chair.free {
+				background-color: green;
+			}
+
+			#chair1 {
+				top: -10vw;
+				left: -10vw;
+			}
+
+			#chair2 {
+				top: -10vw;
+				left: 10vw;
+			}
+
+			#chair3 {
+				top: 10vw;
+				left: -10vw;
+			}
+
+			#chair4 {
+				top: 10vw;
+				left: 10vw;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="root">
+			<div id="table-view">
+				<div id="table">Mesa 1</div>
+				<div class="chair-container">
+					<div class="chair" id="chair1">1</div>
+					<div class="chair" id="chair2">2</div>
+					<div class="chair" id="chair3">3</div>
+					<div class="chair" id="chair4">4</div>
+				</div>
+			</div>
+		</div>
+		
+		<script>
+			var chairs = [];
+			async function check_chair_status() {
+				let status = await fetch("/chair_status",{cache: "no-cache"});
+				status = await status.json();
+				for(let i = 0; i < 4; ++i) {
+					if(status[i].status == "free") {
+						chairs[i].classList.add("free");
+					} else {
+						chairs[i].classList.remove("free");
+					}
+				}
+				setTimeout(check_chair_status, 1000); // repeat
+			}
+
+			window.onload = () => {
+				chairs.push(document.getElementById("chair1"));
+				chairs.push(document.getElementById("chair2"));
+				chairs.push(document.getElementById("chair3"));
+				chairs.push(document.getElementById("chair4"));
+				check_chair_status();
+			}
+		</script>
+	</body>
+</html>
